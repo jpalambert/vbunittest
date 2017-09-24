@@ -1,6 +1,6 @@
 ' Class: VBSUnit
 ' Licence: MIT
-' Author: Valério Farias
+' Author: Valï¿½rio Farias
 ' Contact: http://github.com/valeriofarias
 
 class VBSUnit
@@ -8,33 +8,34 @@ class VBSUnit
  	public dots
 	public failures
 	public errors
+	public nbtested 
 
     private sub Class_initialize()
-        redim dots(0)
+        redim dots(1)
 		redim failures(0)
 		redim errors(0)
+		nbtested = 0
     end sub
     
     private sub Class_terminate()
     end sub
     
 	public sub assert(asserted, message)
-    
+	
 		on error resume next
-        
+		MsgBox(nbtested)
 		if( asserted ) then
 				
-			redim preserve dots(ubound(dots) + 1) : dots(ubound(dots)) = "."
+			redim preserve dots(ubound(dots) + 1)
 				
 		else
 			
 			dim failure_number, failure_description
 			
-			redim preserve dots(ubound(dots) + 1) : dots(ubound(dots)) = "F"
+			
 			redim preserve failures(ubound(failures) + 1)
 			
-			failure_number      = ubound(failures)
-			failure_description = failure_number & ". Failure: " & vbNewLine &_
+			failure_description = "Failure on test nb " & nbtested & vbNewLine &_
 								  message & vbNewLine	
 				
 			failures(ubound(failures)) = failure_description 
@@ -54,7 +55,7 @@ class VBSUnit
 		  end if 				
 		
 		end if
-		
+		nbtested = nbtested + 1
         on error goto 0
     end sub
     
@@ -81,6 +82,7 @@ class VBSUnit
 		assert not (asserted), message & " Asserted: (" & asserted & ")"
 	end sub
 	
+
 	
 	Public function results()
 		
@@ -91,7 +93,7 @@ class VBSUnit
 		failures_number = ubound(failures)
 		errors_number = ubound(errors)
 		
-		results =  join(dots) & vbNewLine & failures_descriptions & vbNewLine & vbNewLine &_ 
+		results =  failures_descriptions & vbNewLine & vbNewLine &_ 
 				   assertions_number & " assertions,  " & failures_number & " failures, " & errors_number &  " errors." & vbNewLine
 	
 	end function
